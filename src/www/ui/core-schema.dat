@@ -946,19 +946,35 @@
   $Schema["TABLE"]["obligation_ref"]["ob_pk"]["ADD"] = "ALTER TABLE \"obligation_ref\" ADD COLUMN \"ob_pk\" int8 DEFAULT nextval('obligation_ref_ob_pk_seq'::regclass)";
   $Schema["TABLE"]["obligation_ref"]["ob_pk"]["ALTER"] = "ALTER TABLE \"obligation_ref\" ALTER COLUMN \"ob_pk\" SET NOT NULL, ALTER COLUMN \"ob_pk\" SET DEFAULT nextval('obligation_ref_ob_pk_seq'::regclass)";
 
-  $Schema["TABLE"]["obligation_ref"]["ob_topic"]["DESC"] = "COMMENT ON COLUMN \"obligation_ref\".\"ob_topic\" IS 'Include notices, Copyleft effect, ...'";
+  $Schema["TABLE"]["obligation_ref"]["ob_type"]["DESC"] = "COMMENT ON COLUMN \"obligation_ref\".\"ob_type\" IS 'Type of legal statement: obligation, restriction, risk or right'";
+  $Schema["TABLE"]["obligation_ref"]["ob_type"]["ADD"] = "ALTER TABLE \"obligation_ref\" ADD COLUMN \"ob_type\" text";
+  $Schema["TABLE"]["obligation_ref"]["ob_type"]["ALTER"] = "ALTER TABLE \"obligation_ref\" ALTER COLUMN \"ob_type\" SET NOT NULL";
+
+    $Schema["TABLE"]["obligation_ref"]["ob_topic"]["DESC"] = "COMMENT ON COLUMN \"obligation_ref\".\"ob_topic\" IS 'An arbitrary name for the obligation: include notices, copyleft effect, ...'";
   $Schema["TABLE"]["obligation_ref"]["ob_topic"]["ADD"] = "ALTER TABLE \"obligation_ref\" ADD COLUMN \"ob_topic\" text";
   $Schema["TABLE"]["obligation_ref"]["ob_topic"]["ALTER"] = "ALTER TABLE \"obligation_ref\" ALTER COLUMN \"ob_topic\" SET NOT NULL";
 
-  $Schema["TABLE"]["obligation_ref"]["ob_text"]["DESC"] = "COMMENT ON COLUMN \"obligation_ref\".\"ob_text\" IS 'Obligation text'";
+  $Schema["TABLE"]["obligation_ref"]["ob_text"]["DESC"] = "COMMENT ON COLUMN \"obligation_ref\".\"ob_text\" IS 'The full text of the obligation'";
   $Schema["TABLE"]["obligation_ref"]["ob_text"]["ADD"] = "ALTER TABLE \"obligation_ref\" ADD COLUMN \"ob_text\" text";
   $Schema["TABLE"]["obligation_ref"]["ob_text"]["ALTER"] = "ALTER TABLE \"obligation_ref\" ALTER COLUMN \"ob_text\" SET NOT NULL";
 
-  $Schema["TABLE"]["obligation_ref"]["ob_active"]["DESC"] = "COMMENT ON COLUMN \"obligation_ref\".\"ob_active\" IS 'change this to false if you don''t want this obligation to be used in new reports'";
+  $Schema["TABLE"]["obligation_ref"]["ob_classification"]["DESC"] = "COMMENT ON COLUMN \"obligation_ref\".\"ob_classification\" IS 'Level of attention this obligation should raise in the clearing process: green, white, yellow or red'";
+  $Schema["TABLE"]["obligation_ref"]["ob_classification"]["ADD"] = "ALTER TABLE \"obligation_ref\" ADD COLUMN \"ob_classification\" text";
+  $Schema["TABLE"]["obligation_ref"]["ob_classification"]["ALTER"] = "ALTER TABLE \"obligation_ref\" ALTER COLUMN \"ob_classification\" DROP NOT NULL";
+
+  $Schema["TABLE"]["obligation_ref"]["ob_modifications"]["DESC"] = "COMMENT ON COLUMN \"obligation_ref\".\"ob_modifications\" IS 'True if the obligation applies on modified source code (mainly applies on copyleft licenses)'";
+  $Schema["TABLE"]["obligation_ref"]["ob_modifications"]["ADD"] = "ALTER TABLE \"obligation_ref\" ADD COLUMN \"ob_modifications\" text";
+  $Schema["TABLE"]["obligation_ref"]["ob_modifications"]["ALTER"] = "ALTER TABLE \"obligation_ref\" ALTER COLUMN \"ob_modifications\" DROP NOT NULL";
+
+  $Schema["TABLE"]["obligation_ref"]["ob_comment"]["DESC"] = "COMMENT ON COLUMN \"obligation_ref\".\"ob_comment\" IS 'Optional comment'";
+  $Schema["TABLE"]["obligation_ref"]["ob_comment"]["ADD"] = "ALTER TABLE \"obligation_ref\" ADD COLUMN \"ob_comment\" text";
+  $Schema["TABLE"]["obligation_ref"]["ob_comment"]["ALTER"] = "ALTER TABLE \"obligation_ref\" ALTER COLUMN \"ob_comment\" DROP NOT NULL";
+
+  $Schema["TABLE"]["obligation_ref"]["ob_active"]["DESC"] = "COMMENT ON COLUMN \"obligation_ref\".\"ob_active\" IS 'Change this to false if you don''t want this obligation to be used in new reports'";
   $Schema["TABLE"]["obligation_ref"]["ob_active"]["ADD"] = "ALTER TABLE \"obligation_ref\" ADD COLUMN \"ob_active\" bool DEFAULT true";
   $Schema["TABLE"]["obligation_ref"]["ob_active"]["ALTER"] = "ALTER TABLE \"obligation_ref\" ALTER COLUMN \"ob_active\" SET NOT NULL, ALTER COLUMN \"ob_active\" SET DEFAULT true";
 
-  $Schema["TABLE"]["obligation_ref"]["ob_text_updatable"]["DESC"] = "COMMENT ON COLUMN \"obligation_ref\".\"ob_text_updatable\" IS 'true if the obligation text can be updated'";
+  $Schema["TABLE"]["obligation_ref"]["ob_text_updatable"]["DESC"] = "COMMENT ON COLUMN \"obligation_ref\".\"ob_text_updatable\" IS 'True if the obligation text can be updated'";
   $Schema["TABLE"]["obligation_ref"]["ob_text_updatable"]["ADD"] = "ALTER TABLE \"obligation_ref\" ADD COLUMN \"ob_text_updatable\" bool DEFAULT false";
   $Schema["TABLE"]["obligation_ref"]["ob_text_updatable"]["ALTER"] = "ALTER TABLE \"obligation_ref\" ALTER COLUMN \"ob_text_updatable\" SET NOT NULL, ALTER COLUMN \"ob_text_updatable\" SET DEFAULT false";
 

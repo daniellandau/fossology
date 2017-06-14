@@ -32,8 +32,12 @@ class ObligationCsvImport {
   protected $headrow = null;
   /** @var array */
   protected $alias = array(
+      'type'=>array('type','Type'),
       'topic'=>array('topic','Obligation or Risk topic'),
       'text'=>array('text','Full Text'),
+      'classification'=>array('classification','Classification'),
+      'modifications'=>array('modifications','Apply on modified source code'),
+      'comment'=>array('comment','Comment'),
       'licnames'=>array('licnames','Associated Licenses')
     );
 
@@ -98,7 +102,7 @@ class ObligationCsvImport {
     }
 
     $mRow = array();
-    foreach( array('topic','text','licnames') as $needle){
+    foreach( array('type','topic','text','classification','modifications','comment','licnames') as $needle){
       $mRow[$needle] = $row[$this->headrow[$needle]];
     }
 
@@ -108,7 +112,7 @@ class ObligationCsvImport {
   private function handleHeadCsv($row)
   {
     $headrow = array();
-    foreach( array('topic','text','licnames') as $needle){
+    foreach( array('type','topic','text','classification','modifications','comment','licnames') as $needle){
       $col = ArrayOperation::multiSearch($this->alias[$needle], $row);
       if (false === $col)
       {
@@ -136,16 +140,16 @@ class ObligationCsvImport {
     /* @var $dbManager DbManager */
     $dbManager = $this->dbManager;
     $exists = $this->getKeyFromTopicAndText($row);
+
     if ($exists !== false)
     {
       return "Obligation topic '$row[topic]' with text '$row[text]' already exists in DB (id=".$exists.")";
     }
 
     $stmtInsert = __METHOD__.'.insert';
-    $dbManager->prepare($stmtInsert,'INSERT INTO obligation_ref (ob_topic,ob_text,ob_md5)'
-            . ' VALUES ($1,$2,md5($2)) RETURNING ob_pk');
-    $resi = $dbManager->execute($stmtInsert,
-            array($row['topic'],$row['text']));
+    $dbManager->prepare($stmtInsert,'INSERT INTO obligation_ref (ob_type,ob_topic,ob_text,ob_classification,ob_modifications,ob_comment,ob_md5)'
+            . ' VALUES ($1,$2,$3,$4,$5,$6,md5($3)) RETURNING ob_pk');
+    $resi = $dbManager->execute($stmtInsert,array($row['type'],$row['topic'],$row['text'],$row['classification'],$row['modifications'],$row['comment']));
     $new = $dbManager->fetchArray($resi);
     $dbManager->freeResult($resi);
 
@@ -182,10 +186,10 @@ class ObligationCsvImport {
         }
       }
 
-      $return = "Obligation topic '$row[topic]' was added and associated with licenses '$associatedLicenses' in DB";
+      $return .= "Obligation topic '$row[topic]' was added and associated with licenses '$associatedLicenses' in DB";
+
     }
 
     return $return;
   }
-
 }
