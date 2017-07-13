@@ -110,6 +110,9 @@ int cli_onNoMatch(MonkState* state, const File* file) {
   if (state->verbosity >= 1) {
     printf("File %s contains license(s) No_license_found\n", file->fileName);
   }
+  if (state->json) {
+    printf("{\"type\":\"no-match\"}");
+  }
   return 1;
 }
 
