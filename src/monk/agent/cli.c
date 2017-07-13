@@ -41,7 +41,8 @@ int parseArguments(MonkState* state, int argc, char** argv, int* fileOptInd)
 {
   int c;
   state->verbosity = 0;
-  while ((c = getopt(argc, argv, "VvhB:")) != -1) {
+  state->json = 0;
+  while ((c = getopt(argc, argv, "VvJhB:")) != -1) {
     switch (c) {
       case 'v':
         state->verbosity++;
@@ -53,12 +54,16 @@ int parseArguments(MonkState* state, int argc, char** argv, int* fileOptInd)
         printf(AGENT_NAME " (no version available)\n");
 #endif
         return 0;
+      case 'J':
+        state->json = 1;
+        break;
       case 'h':
       default:
         printf("Usage: %s [options] -- [file [file [...]]\n", argv[0]);
         printf("  -h   :: help (print this message), then exit.\n"
                "  -c   :: specify the directory for the system configuration.\n"
                "  -v   :: verbose output.\n"
+               "  -J   :: JSON output.\n"
                "  file :: scan file and print licenses detected within it.\n"
                "  no file :: process data from the scheduler.\n"
                "  -V   :: print the version info, then exit.\n");
@@ -112,9 +117,15 @@ int cli_onFullMatch(MonkState* state, const File* file, const License* license, 
   if (state->scanMode != MODE_CLI)
     return 0;
 
-  printf("found full match between \"%s\" and \"%s\" (rf_pk=%ld); matched: %zu+%zu\n",
-         file->fileName, license->shortname, license->refId,
-         matchInfo->text.start, matchInfo->text.length);
+  if (state->json) {
+    printf("{\"type\":\"full\",\"license\":\"%s\",\"ref-pk\":%ld,\"matched\":\"%zu+%zu\"}",
+           license->shortname, license->refId,
+           matchInfo->text.start, matchInfo->text.length);
+  } else {
+    printf("found full match between \"%s\" and \"%s\" (rf_pk=%ld); matched: %zu+%zu\n",
+           file->fileName, license->shortname, license->refId,
+           matchInfo->text.start, matchInfo->text.length);
+  }
   return 1;
 }
 
@@ -126,10 +137,16 @@ int cli_onDiff(MonkState* state, const File* file, const License* license, const
 
   char * formattedMatchArray = formatMatchArray(diffResult->matchedInfo);
 
-  printf("found diff match between \"%s\" and \"%s\" (rf_pk=%ld); rank %u; diffs: {%s}\n",
-         file->fileName, license->shortname, license->refId,
-         rank,
-         formattedMatchArray);
+  if (state->json) {
+    printf("{\"type\":\"diff\",\"license\":\"%s\",\"ref-pk\":%ld,\"rank\":%u,\"diffs\":\"%s\"}",
+           license->shortname, license->refId,
+           rank, formattedMatchArray);
+  } else {
+    printf("found diff match between \"%s\" and \"%s\" (rf_pk=%ld); rank %u; diffs: {%s}\n",
+           file->fileName, license->shortname, license->refId,
+           rank,
+           formattedMatchArray);
+  }
 
   free(formattedMatchArray);
   return 1;
