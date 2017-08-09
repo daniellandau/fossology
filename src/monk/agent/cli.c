@@ -21,7 +21,14 @@ Copyright (C) 2013-2014, Siemens AG
 #include "match.h"
 #include <getopt.h>
 
-MatchCallbacks cliCallbacks = { .onNo = cli_onNoMatch, .onFull = cli_onFullMatch, .onDiff = cli_onDiff};
+MatchCallbacks cliCallbacks =
+  { .onNo = cli_onNoMatch,
+    .onFull = cli_onFullMatch,
+    .onBeginOutput = cli_onBeginOutput,
+    .onBetweenIndividualOutputs = cli_onBetweenIndividualOutputs,
+    .onEndOutput = cli_onEndOutput,
+    .onDiff = cli_onDiff
+  };
 
 int matchCliFileWithLicenses(MonkState* state, const Licenses* licenses, int argi, char** argv) {
   File file;
@@ -152,6 +159,26 @@ int cli_onDiff(MonkState* state, const File* file, const License* license, const
   }
 
   free(formattedMatchArray);
+  return 1;
+}
+
+
+int cli_onBeginOutput(MonkState* state) {
+  if (state->json) {
+    printf("[");
+  }
+  return 1;
+}
+int cli_onBetweenIndividualOutputs(MonkState* state) {
+  if (state->json) {
+    printf(",");
+  }
+  return 1;
+}
+int cli_onEndOutput(MonkState* state) {
+  if (state->json) {
+    printf("]");
+  }
   return 1;
 }
 
