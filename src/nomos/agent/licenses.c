@@ -1173,7 +1173,7 @@ static void saveLicenseData(scanres_t *scores, int nCand, int nElem,
   /* DBug: printf("saveLicenseData on return gl.initwd is:%s\n",gl.initwd); */
   if(cur.cliMode) 
   {
-    if (gl.flags & OPTS_JSON_OUTPUT) {
+    if (gl.progOpts & OPTS_JSON_OUTPUT) {
       printf("[");
       parseLicenseList();
       size_t i = 0;
