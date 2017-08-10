@@ -49,7 +49,9 @@ int main(int argc, char** argv)
     return_sched(1);
   }
 
+#ifndef DISABLE_JSON
   bool json = cliOptions.doJsonOutput();
+#endif
   CopyrightState state = getState(dbManager, std::move(cliOptions));
 
   if (!fileNames.empty())
