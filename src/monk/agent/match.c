@@ -389,11 +389,11 @@ int processMatches(MonkState* state, const File* file, const GArray* matches, co
     return 1;
   }
 
-  callbacks->onBeginOutput(state);
-
   if (callbacks->onAll) {
     return callbacks->onAll(state, file, matches);
   }
+
+  callbacks->onBeginOutput(state);
 
   const guint matchCount = matches->len;
 
