@@ -85,9 +85,12 @@ bool parseCliOptions(int argc, char** argv, CliOptions& dest, std::vector<std::s
           boost::program_options::value< vector<string> >(),
           "files to scan"
         )
+#ifndef DISABLE_JSON
         (
           "json,J", "output JSON"
-        );
+        )
+#endif
+    ;
 
   boost::program_options::positional_options_description p;
   p.add("files", -1);

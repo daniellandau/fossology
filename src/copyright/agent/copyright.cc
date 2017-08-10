@@ -20,8 +20,11 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #include <iostream>
 #include <sstream>
 
-#include "json.hpp"
 #include "copyright.hpp"
+
+#ifndef DISABLE_JSON
+#include "json.hpp"
+#endif
 
 using namespace std;
 using namespace fo;
@@ -77,6 +80,7 @@ int main(int argc, char** argv)
             (*sc)->ScanString(s, l);
           }
 
+#ifndef DISABLE_JSON
           if (json) {
             vector<nlohmann::json> results;
             for (auto m = l.begin();  m != l.end(); ++m)
@@ -92,6 +96,7 @@ int main(int argc, char** argv)
             output["results"] = results;
             cout << output.dump();
           } else {
+#endif
             stringstream ss;
             ss << fileName << " ::" << endl;
             // Output matches
@@ -103,7 +108,9 @@ int main(int argc, char** argv)
             }
             // Thread-Safety: output all matches (collected in ss) at once to cout
             cout << ss.str();
+#ifndef DISABLE_JSON
           }
+#endif
         }
       }
     }
